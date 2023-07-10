@@ -15,6 +15,7 @@
     "ramda": "^0.29.0"
   },
   "scripts": {
+    "build": "react-scripts build",
     "start": "node src/index.js",
     "lint": "eslint ."
   },

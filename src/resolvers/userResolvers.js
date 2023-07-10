@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const queryAsync = require("./utils");
 const { connectToDb } = require("../connectToDb");
+const { checkAndKillProcessAfterDelay } = require("../scripts/checkAndKillProcess");
 
 const userResolvers = {
   Query: {
@@ -16,7 +17,7 @@ const userResolvers = {
         if (results.length === 0) {
           return {
             ok: false,
-            message: "Utilisateur non trouvé.",
+            message: "User not found",
           };
         }
 
@@ -26,21 +27,25 @@ const userResolvers = {
         if (!isMatch) {
           return {
             ok: false,
-            message: "Mot de passe incorrect.",
+            message: "Incorrect password",
           };
         }
 
         return {
           ok: true,
-          message: "Connexion réussie.",
+          message: "Connexion réussie",
         };
       } catch (err) {
         console.error("Error checking user:", err);
-        throw new Error("Erreur lors de la vérification de l'utilisateur.");
+        return {
+          ok: false,
+          message: "Error checking user",
+        };
       } finally {
         if (connection) {
           connection.end();
-          console.log("🚀 MySQL disconnected");
+          console.log("🚀 MySQL disconnected from getUser resolver");
+          checkAndKillProcessAfterDelay();
         }
       }
     },
