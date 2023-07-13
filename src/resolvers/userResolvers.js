@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const queryAsync = require("./utils");
 const { connectToDb } = require("../connectToDb");
-const { checkAndKillProcessAfterDelay } = require("../scripts/checkAndKillProcess");
 
 const userResolvers = {
   Query: {
@@ -45,7 +44,6 @@ const userResolvers = {
         if (connection) {
           connection.end();
           console.log("🚀 MySQL disconnected from getUser resolver");
-          checkAndKillProcessAfterDelay();
         }
       }
     },

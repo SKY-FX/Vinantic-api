@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 const queryAsync = require("./utils");
 const { connectToDb } = require("../connectToDb");
-const { checkAndKillProcessAfterDelay } = require("../scripts/checkAndKillProcess");
 
 const IMAGES_ROOT_PATH = "../../src/assets/images/";
 const FOLDER_PATH = path.resolve(__dirname, "../../src/assets/images");
@@ -39,7 +38,6 @@ const imageResolvers = {
         if (connection) {
           connection.end();
           console.log("🚀 MySQL disconnected from getImages query");
-          checkAndKillProcessAfterDelay();
         }
       }
     },
@@ -68,7 +66,6 @@ const imageResolvers = {
         if (connection) {
           connection.end();
           console.log("🚀 MySQL disconnected from setImages mutation");
-          checkAndKillProcessAfterDelay();
         }
       }
     },
@@ -93,7 +90,6 @@ const imageResolvers = {
         if (connection) {
           connection.end();
           console.log("🚀 MySQL disconnected from deleteImages mutation");
-          checkAndKillProcessAfterDelay();
         }
       }
     },

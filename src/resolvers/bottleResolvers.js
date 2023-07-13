@@ -1,5 +1,4 @@
 const { connectToDb } = require("../connectToDb");
-const { checkAndKillProcessAfterDelay } = require("../scripts/checkAndKillProcess");
 const queryAsync = require("./utils");
 
 const bottleResolvers = {
@@ -26,7 +25,6 @@ const bottleResolvers = {
         if (connection) {
           connection.end();
           console.log("🚀 MySQL disconnected from getBottles query");
-          checkAndKillProcessAfterDelay();
         }
       }
     },
@@ -69,7 +67,6 @@ const bottleResolvers = {
         if (connection) {
           connection.end();
           console.log("🚀 MySQL disconnected from setBottles mutation");
-          checkAndKillProcessAfterDelay();
         }
       }
     },
@@ -94,7 +91,6 @@ const bottleResolvers = {
         if (connection) {
           connection.end();
           console.log("🚀 MySQL disconnected from deleteBottles mutations");
-          checkAndKillProcessAfterDelay();
         }
       }
     },

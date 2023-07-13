@@ -7,6 +7,9 @@ const { json } = require("body-parser");
 const cors = require("cors");
 
 const mergedSchema = require("./schema");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const startServer = async () => {
   try {
@@ -19,9 +22,19 @@ const startServer = async () => {
 
     await server.start();
 
-    app.use("/graphql", cors({ origin: ["https://www.vinantic.fr"] }), json(), expressMiddleware(server));
+    app.use(
+      "/graphql",
+      cors({
+        origin: "https://www.vinantic.fr",
+        methods: "POST",
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+      }),
+      json(),
+      expressMiddleware(server)
+    );
 
-    await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+    await new Promise((resolve) => httpServer.listen({ port: process.env.APOLLO_SERVER_PORT }, resolve));
     console.log(`🚀 Server ready at http://localhost:4000/graphql`);
   } catch (err) {
     console.error("Error starting server:", err);

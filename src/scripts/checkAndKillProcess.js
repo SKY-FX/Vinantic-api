@@ -1,6 +1,6 @@
 const { exec } = require("child_process");
 
-const DELAY_BEFORE_KILL = 3600000; // 1 hour in milliseconds
+const DELAY_BEFORE_KILL = 60000; // 60 seconds in milliseconds
 
 /* Check and Kill the processes whose ports are at 4000 and the states are CLOSE_WAIT */
 const checkAndKillProcess = () => {
