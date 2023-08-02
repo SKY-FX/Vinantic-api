@@ -38,7 +38,7 @@ const bottleResolvers = {
         for (let i = 0; i < bottles.length; i++) {
           const bottle = bottles[i];
           const query =
-            "INSERT INTO bottles (name, price, year, quality, bottleRef, bottleType, city, quantity, wineType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO bottles (name, price, year, quality, bottleRef, bottleType, city, quantity, wineType, imageData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
           const values = [
             bottle.name,
             bottle.price,
@@ -49,6 +49,7 @@ const bottleResolvers = {
             bottle.city,
             bottle.quantity,
             bottle.wineType,
+            bottle.imageData
           ];
           await queryAsync(connection)(query, values);
         }
