@@ -25,7 +25,8 @@ const startServer = async () => {
     app.use(
       "/graphql",
       cors({
-        origin: "https://www.vinantic.fr",
+        // origin: "https://www.vinantic.fr",
+        origin: true,
         methods: "POST",
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,

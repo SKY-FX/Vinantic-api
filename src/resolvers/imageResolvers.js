@@ -4,8 +4,8 @@ const path = require("path");
 const queryAsync = require("./utils");
 const { connectToDb } = require("../connectToDb");
 
-const IMAGES_ROOT_PATH = "../../src/assets/images/";
-const FOLDER_PATH = path.resolve(__dirname, "../../src/assets/images");
+const IMAGES_ROOT_PATH = "../assets";
+const FOLDER_PATH = path.resolve(__dirname, "../assets/images");
 
 const imageResolvers = {
   Query: {
