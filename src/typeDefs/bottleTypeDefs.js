@@ -10,7 +10,6 @@ const bottleTypeDefs = `#graphql
     city: String!
     quantity: Int!
     wineType: String!
-    imageData: String!
   }
 
   input InputBottle {
@@ -23,7 +22,6 @@ const bottleTypeDefs = `#graphql
     city: String!
     quantity: Int!
     wineType: String!
-    imageData: String!
   }
 
   type bottleQueryResponse {
