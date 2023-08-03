@@ -14,7 +14,7 @@ const userResolvers = require("./resolvers/userResolvers");
 
 /* Global Schema */
 const globalTypeDefs = require("./typeDefs/globalTypeDefs");
-const globalResolvers = require("./resolvers/globalResolvers");
+const globalResolvers = require("./resolvers/globalResolvers/globalResolvers");
 
 /* Merge Schema */
 const mergedSchema = makeExecutableSchema({
