@@ -12,10 +12,14 @@ const imageResolvers = require("./resolvers/imageResolvers");
 const userTypeDefs = require("./typeDefs/userTypeDefs");
 const userResolvers = require("./resolvers/userResolvers");
 
+/* Global Schema */
+const globalTypeDefs = require("./typeDefs/globalTypeDefs");
+const globalResolvers = require("./resolvers/globalResolvers");
+
 /* Merge Schema */
 const mergedSchema = makeExecutableSchema({
-  typeDefs: [bottleTypeDefs, imageTypeDefs, userTypeDefs],
-  resolvers: [bottleResolvers, imageResolvers, userResolvers]
+  typeDefs: [bottleTypeDefs, imageTypeDefs, userTypeDefs, globalTypeDefs],
+  resolvers: [bottleResolvers, imageResolvers, userResolvers, globalResolvers]
 });
 
 module.exports = mergedSchema;
