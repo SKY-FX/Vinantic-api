@@ -31,6 +31,10 @@ const globalTypeDefs = `#graphql
   type Mutation {
     setGlobal: mutationResponse!
   }
+
+  type Mutation {
+    deleteGlobal: mutationResponse!
+  }
 `;
 
 module.exports = globalTypeDefs;

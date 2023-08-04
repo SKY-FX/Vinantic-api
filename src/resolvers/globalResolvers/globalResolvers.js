@@ -88,6 +88,30 @@ const globalResolvers = {
         }
       }
     },
+    deleteGlobal: async () => {
+      let connection;
+      try {
+        connection = await connectToDb();
+        const query = "DELETE FROM global";
+        await queryAsync(connection)(query);
+
+        return {
+          ok: true,
+          message: "Global have been successfully deleted.",
+        };
+      } catch (err) {
+        console.error("Error deleting global:", err);
+        return {
+          ok: false,
+          message: `Error deleting global: ${err}`,
+        };
+      } finally {
+        if (connection) {
+          connection.end();
+          console.log("🚀 MySQL disconnected from deleteGlobal mutation");
+        }
+      }
+    },
   },
 };
 
