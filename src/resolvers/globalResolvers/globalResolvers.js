@@ -37,6 +37,46 @@ const globalResolvers = {
         }
       }
     },
+    getWineBottle: async (_, args) => {
+      let connection;
+      try {
+        const { id } = args;
+
+        connection = await connectToDb();
+        const query = "SELECT * FROM global WHERE id = ?";
+        const results = await queryAsync(connection)(query, [id]);
+
+        if (results.length === 0) {
+          return {
+            ok: false,
+            message: "Wine bottle not found",
+          };
+        }
+
+        const wineBottle = results[0];
+        const newWineBottle = {
+          ...wineBottle,
+          imageData: wineBottle.imageData.toString("base64"),
+        };
+
+        return {
+          ok: true,
+          message: "Wine bottle have been retrieved from the database",
+          data: newWineBottle,
+        };
+      } catch (err) {
+        console.error("Error getting wine bottle:", err);
+        return {
+          ok: false,
+          message: "Error getting wine bottle",
+        };
+      } finally {
+        if (connection) {
+          connection.end();
+          console.log("🚀 MySQL disconnected from getWineBottle query");
+        }
+      }
+    },
   },
   Mutation: {
     setGlobal: async () => {

@@ -24,8 +24,18 @@ const globalTypeDefs = `#graphql
     data: [Global!]!
   }
 
+  type bottleWineQueryResponse {
+    ok: Boolean!
+    message: String!
+    data: Global!
+  }
+
   type Query {
     getGlobal: globalQueryResponse!
+  }
+
+  type Query {
+    getWineBottle(id: ID!): bottleWineQueryResponse!
   }
 
   type Mutation {
