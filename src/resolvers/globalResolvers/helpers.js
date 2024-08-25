@@ -38,6 +38,7 @@ const getWinesInfosFromXlsFile = ({ filePath }) => {
           wineType: propOr("", "Type"),
           city: propOr("", "Ville"),
           quantity: propOr(0, "Quantity"),
+          description: propOr("", "Description"),
         })
       ),
       transformBottles
@@ -95,9 +96,24 @@ const getImagesFromFolder = async ({ rootPath }) => {
   }
 };
 
+const getSortWinesList = ({ wineList, sortBy }) => {
+  // Trier les bouteilles de vin en fonction de l'option de tri sélectionnée
+  let sortedList = wineList;
+  if (sortBy === "year") {
+    sortedList = wineList.sort((a, b) => a.year - b.year);
+  } else if (sortBy === "price") {
+    sortedList = wineList.sort((a, b) => a.price - b.price);
+  } else if (sortBy === "name") {
+    sortedList = wineList.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  return sortedList;
+};
+
 module.exports = {
   getWinesInfosFromXlsFile,
   getImagesFromFolder,
   getImageSource,
   transformBottles,
+  getSortWinesList,
 };

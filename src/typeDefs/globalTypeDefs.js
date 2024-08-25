@@ -10,6 +10,7 @@ const globalTypeDefs = `#graphql
     city: String!
     quantity: Int!
     wineType: String!
+    description: String!
     imageData: String!
   }
 
@@ -22,6 +23,8 @@ const globalTypeDefs = `#graphql
     ok: Boolean!
     message: String!
     data: [Global!]!
+    totalCount: Int!
+    totalCountInSearch: Int!
   }
 
   type bottleWineQueryResponse {
@@ -31,18 +34,12 @@ const globalTypeDefs = `#graphql
   }
 
   type Query {
-    getGlobal: globalQueryResponse!
-  }
-
-  type Query {
+    getGlobal(offset: Int, limit: Int, sortBy: String, searchText: String): globalQueryResponse!
     getWineBottle(id: ID!): bottleWineQueryResponse!
   }
 
   type Mutation {
     setGlobal: mutationResponse!
-  }
-
-  type Mutation {
     deleteGlobal: mutationResponse!
   }
 `;

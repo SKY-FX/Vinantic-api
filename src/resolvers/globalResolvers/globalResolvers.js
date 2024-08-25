@@ -1,19 +1,61 @@
 const { connectToDb } = require("../../connectToDb");
 const queryAsync = require("../utils");
 
-const { getWinesInfosFromXlsFile, getImagesFromFolder, getImageSource } = require("./helpers");
+const { getWinesInfosFromXlsFile, getImagesFromFolder, getImageSource, getSortWinesList } = require("./helpers");
 const { XLS_FILE_PATH, IMAGES_ROOT_PATH } = require("./constants");
+const { isEmpty } = require("ramda");
 
 const globalResolvers = {
   Query: {
-    getGlobal: async () => {
+    getGlobal: async (_, args) => {
+      const { offset = 0, limit, sortBy = 'id', searchText = '' } = args;
       let connection;
+
       try {
         connection = await connectToDb();
-        const query = "SELECT * FROM global";
-        const global = await queryAsync(connection)(query);
+        let winesList = [];
+        let totalCountInSearch = 0;
 
-        const newGlobal = global.map((row) => ({
+        const countQuery = "SELECT COUNT(*) AS totalCount FROM global";
+        const totalCountResult = await queryAsync(connection)(countQuery);
+        const totalCount = totalCountResult[0].totalCount;
+        const nbItems = limit || totalCount;
+
+        // Liste des colonnes valides pour le tri
+        const validSortColumns = ['year', 'price', 'name'];
+
+        // Construire la clause ORDER BY uniquement si sortBy est valide
+        const orderByClause = validSortColumns.includes(sortBy) ? `ORDER BY ${sortBy} ASC` : '';
+
+        if (isEmpty(searchText)) {
+          // Pas de recherche texte, on applique uniquement tri et pagination
+          const dataQuery = `
+            SELECT *
+            FROM global
+            ${orderByClause}
+            LIMIT ? OFFSET ?
+          `;
+          winesList = await queryAsync(connection)(dataQuery, [nbItems, offset]);
+          totalCountInSearch = totalCount;
+        } else {
+          // Rechercher les éléments en fonction du searchText dans plusieurs colonnes
+          const filteredQuery = `
+            SELECT *
+            FROM global
+            WHERE name LIKE CONCAT('%', ?, '%')
+              OR city LIKE CONCAT('%', ?, '%')
+              OR price LIKE CONCAT('%', ?, '%')
+              OR wineType LIKE CONCAT('%', ?, '%')
+              OR year LIKE CONCAT('%', ?, '%')
+            ${orderByClause}
+          `;
+          const filteredList = await queryAsync(connection)(filteredQuery, [searchText, searchText, searchText, searchText, searchText]);
+
+          totalCountInSearch = filteredList.length;
+          winesList = filteredList.slice(offset, offset + nbItems);
+        }
+
+        const newGlobal = winesList.map((row) => ({
           ...row,
           id: row.id.toString(),
           imageData: row.imageData.toString("base64"),
@@ -23,6 +65,8 @@ const globalResolvers = {
           ok: true,
           message: "Global have been retrieved from the database",
           data: newGlobal,
+          totalCount,
+          totalCountInSearch,
         };
       } catch (err) {
         console.error("Error getting global:", err);
@@ -94,7 +138,7 @@ const globalResolvers = {
           const imageData = getImageSource({ bottle, imagesList });
 
           const query =
-            "INSERT INTO global (name, price, year, quality, bottleRef, bottleType, city, quantity, wineType, imageData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO global (name, price, year, quality, bottleRef, bottleType, city, quantity, wineType, description, imageData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
           const values = [
             bottle.name,
@@ -106,6 +150,7 @@ const globalResolvers = {
             bottle.city,
             bottle.quantity,
             bottle.wineType,
+            bottle.description,
             imageData,
           ];
           await queryAsync(connection)(query, values);
