@@ -153,6 +153,7 @@ const globalResolvers = {
             bottle.description,
             imageData,
           ];
+      
           await queryAsync(connection)(query, values);
         });
 
